@@ -1,0 +1,24 @@
+{
+  "name": "my_first_firebase_app",
+  "version": "1.0.0",
+  "description": "Firebase (Cloud Functions, Firestore) と Node.jsでのPlayground",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TakeshiHoshina/my_first_firebase_app.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/TakeshiHoshina/my_first_firebase_app/issues"
+  },
+  "homepage": "https://github.com/TakeshiHoshina/my_first_firebase_app#readme",
+  "dependencies": {
+    "ejs": "^3.1.6",
+    "express": "^4.17.1"
+  }
+}
