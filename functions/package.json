@@ -4,19 +4,25 @@
   "scripts": {
     "serve": "firebase emulators:start --only functions",
     "shell": "firebase functions:shell",
-    "start": "npm run shell",
+    "start": "functions-framework --target=helloWorld",
+    "watch": "npm-watch start",
     "deploy": "firebase deploy --only functions",
     "logs": "firebase functions:log"
+  },
+  "watch": {
+  "start": "*.js"
   },
   "engines": {
     "node": "12"
   },
   "main": "index.js",
   "dependencies": {
+    "@google-cloud/functions-framework": "^1.7.1",
     "ejs": "^3.1.6",
     "express": "^4.17.1",
     "firebase-admin": "^9.2.0",
     "firebase-functions": "^3.11.0",
+    "npm-watch": "^0.7.0",
     "request": "^2.88.2",
     "request-promise": "^4.2.6",
     "request-promise-native": "^1.0.9"

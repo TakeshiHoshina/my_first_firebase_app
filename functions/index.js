@@ -18,6 +18,10 @@ const getDataFromApi = async (cityname) => {
   }
 };
 
+const helloWorld = (req, res) => {
+  res.send('Hello, World');
+};
+
 app.get('/weather/:cityname', (req, res) => {
   getDataFromApi(req.params.cityname).then((response) => res.send(response));
 });
@@ -46,5 +50,5 @@ app.get('/user/:userId', (req, res) => {
   res.send(targetUser);
 });
 
-const api = functions.https.onRequest(app);
-module.exports = { api };
+// const helloWorld = functions.https.onRequest(app);
+module.exports = { helloWorld };
