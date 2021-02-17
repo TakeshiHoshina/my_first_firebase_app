@@ -18,9 +18,13 @@ const getDataFromApi = async (cityname) => {
   }
 };
 
-const helloWorld = (req, res) => {
+app.get('/', (req, res) => {
+  res.render('hello.ejs');
+});
+
+app.get('/helloWorld', (req, res) => {
   res.send('Hello, World');
-};
+});
 
 app.get('/weather/:cityname', (req, res) => {
   getDataFromApi(req.params.cityname).then((response) => res.send(response));
@@ -50,5 +54,5 @@ app.get('/user/:userId', (req, res) => {
   res.send(targetUser);
 });
 
-// const helloWorld = functions.https.onRequest(app);
-module.exports = { helloWorld };
+const api = functions.https.onRequest(app);
+module.exports = { api };
