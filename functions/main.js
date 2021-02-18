@@ -2,7 +2,33 @@ const functions = require("firebase-functions");
 const express = require('express');
 const requestPromise = require('request-promise');
 
+// The Firebase Admin SDK to access Firestore.
+const admin = require('firebase-admin');
+admin.initializeApp();
+
 const app = express();
+
+
+app.get('/addHoge', (req, res) => {
+  const original = 'Hoge';
+  const writeResult = admin.firestore().collection('messages').add({original: original});
+  res.json({result: `Message with ID: ${writeResult.id} added.`});
+});
+
+
+app.post('/addMessage', async (req, res) => {
+  const addedMessage = req.body.message;
+  console.log(addedMessage);
+  const writeResult = await admin.firestore().collection('messages').add({message: addedMessage});
+  res.json({result: `Message with ID: ${writeResult.id} added.`});
+});
+
+app.post('/console', (req, res) => {
+  const text = req.body.text;
+  console.log(text);
+  res.redirect('/');
+});
+
 
 const getDataFromApi = async (cityname) => {
   try {
