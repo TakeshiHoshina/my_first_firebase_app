@@ -1,12 +1,15 @@
 const functions = require("firebase-functions");
 const express = require('express');
+const app = express();
 const requestPromise = require('request-promise');
+
+// get serviceAccountKey
+const serviceAccount = require('../secrets/serviceAccountKey.json');
 
 // The Firebase Admin SDK to access Firestore.
 const admin = require('firebase-admin');
-admin.initializeApp();
-
-const app = express();
+admin.initializeApp({credential: admin.credential.cert(serviceAccount)});
+const db = admin.firestore();
 
 
 app.get('/addHoge', (req, res) => {
@@ -19,8 +22,16 @@ app.get('/addHoge', (req, res) => {
 app.post('/addMessage', async (req, res) => {
   const addedMessage = req.body.message;
   console.log(addedMessage);
-  const writeResult = await admin.firestore().collection('messages').add({message: addedMessage});
+  const writeResult = await db.collection('messages').add({message: addedMessage});
   res.json({result: `Message with ID: ${writeResult.id} added.`});
+});
+
+// "message"コレクションにあるすべての値を表示
+app.get('/getAll', async (req, res) => {
+  const snapshot = await db.collection('messages').get();
+  const documents = snapshot.docs.map(s => s.data());
+  console.log(documents);
+  res.send(documents);
 });
 
 app.post('/console', (req, res) => {

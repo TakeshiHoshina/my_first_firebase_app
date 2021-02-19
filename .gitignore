@@ -46,6 +46,7 @@ build/Release
 
 # Dependency directories
 node_modules/
+secrets/
 
 # Optional npm cache directory
 .npm
