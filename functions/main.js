@@ -3,12 +3,20 @@ const express = require('express');
 const app = express();
 const requestPromise = require('request-promise');
 
-// get serviceAccountKey
-const serviceAccount = require('../secrets/serviceAccountKey.json');
+// // get serviceAccountKey
+// const serviceAccount = require('../secrets/serviceAccountKey.json');
+//
+// // The Firebase Admin SDK to access Firestore.
+// const admin = require('firebase-admin');
+// admin.initializeApp({credential: admin.credential.cert(serviceAccount)});
+// const db = admin.firestore();
 
-// The Firebase Admin SDK to access Firestore.
+// `npm run watch`実行前に以下をターミナルで実行すると、環境変数として指定される
+// export GOOGLE_APPLICATION_CREDENTIALS="../secrets/serviceAccountKey.json"
+
+// The Firebase Admin SDK to access Firestore. without Service Account
 const admin = require('firebase-admin');
-admin.initializeApp({credential: admin.credential.cert(serviceAccount)});
+admin.initializeApp();
 const db = admin.firestore();
 
 
@@ -18,7 +26,7 @@ app.get('/addHoge', (req, res) => {
   res.json({result: `Message with ID: ${writeResult.id} added.`});
 });
 
-
+// メッセージを追加
 app.post('/addMessage', async (req, res) => {
   const addedMessage = req.body.message;
   console.log(addedMessage);
