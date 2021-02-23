@@ -3,13 +3,17 @@ const express = require('express');
 const app = express();
 const requestPromise = require('request-promise');
 
-// // get serviceAccountKey
-// const serviceAccount = require('../secrets/serviceAccountKey.json');
-//
-// // The Firebase Admin SDK to access Firestore.
-// const admin = require('firebase-admin');
-// admin.initializeApp({credential: admin.credential.cert(serviceAccount)});
-// const db = admin.firestore();
+/*
+
+// get serviceAccountKey
+const serviceAccount = require('../secrets/serviceAccountKey.json');
+
+// The Firebase Admin SDK to access Firestore.
+const admin = require('firebase-admin');
+admin.initializeApp({credential: admin.credential.cert(serviceAccount)});
+const db = admin.firestore();
+
+*/
 
 // `npm run watch`実行前に以下をターミナルで実行すると、環境変数として指定される
 // export GOOGLE_APPLICATION_CREDENTIALS="../secrets/serviceAccountKey.json"
@@ -99,5 +103,35 @@ app.get('/user/:userId', (req, res) => {
   res.send(targetUser);
 });
 
-const api = functions.https.onRequest(app);
-module.exports = { api };
+// const api = functions.https.onRequest(app);
+// module.exports = { api };
+
+const hello = (req, res) => {
+  res.send('Hello Express!!');
+};
+
+const api = (req, res) => {
+  res.send('This is API called...');
+};
+
+
+// Slack App ガイドの写経ここから
+
+const sample = (req, res) => {
+  res.send('Hello Salck Guide Mockup :p');
+};
+
+exports.function = functions.https.onRequest((req, res) => {
+  const paths = {
+    '/sample': sample,
+    '/api': api,
+    '/hello': hello,
+    '/': () => res.send(Object.keys(paths)),
+  };
+  for (const [path, route] of Object.entries(paths)) {
+    if (req.path.startsWith(path)) {
+      return route(req, res);
+    }
+  }
+  res.send('No path found');
+});
