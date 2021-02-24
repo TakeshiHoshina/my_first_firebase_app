@@ -117,6 +117,20 @@ const api = (req, res) => {
 
 // Slack App ガイドの写経ここから
 
+const axios = require('axios');
+const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+
+const commands = async (req, res) => {
+  res.status(200).end(); //タイムアウトを回避。まずレスポンス。
+  const body = req.body;
+  console.log(body);
+  // await sleep(5000) 5秒まつ
+  axios.post(body.response_url, {
+    text: `<@W018927DL72> ${body.user_name} wanna TakkesyEats:v:`,
+    response_type: 'in_channel'
+  });
+};
+
 const sample = (req, res) => {
   res.send('Hello Salck Guide Mockup :p');
 };
@@ -124,9 +138,10 @@ const sample = (req, res) => {
 exports.function = functions.https.onRequest((req, res) => {
   const paths = {
     '/sample': sample,
+    '/commands': commands,
     '/api': api,
     '/hello': hello,
-    '/': () => res.send(Object.keys(paths)),
+    '/': () => res.send(Object.keys(paths))
   };
   for (const [path, route] of Object.entries(paths)) {
     if (req.path.startsWith(path)) {
