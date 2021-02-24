@@ -117,9 +117,14 @@ const api = (req, res) => {
 
 // Slack App ガイドの写経ここから
 
+const sample = (req, res) => {
+  res.send('Hello Salck Guide Mockup :p');
+};
+
 const axios = require('axios');
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
+/*
 const commands = async (req, res) => {
   res.status(200).end(); //タイムアウトを回避。まずレスポンス。
   const body = req.body;
@@ -130,15 +135,75 @@ const commands = async (req, res) => {
     response_type: 'in_channel'
   });
 };
+*/
 
-const sample = (req, res) => {
-  res.send('Hello Salck Guide Mockup :p');
+const commands = async (req, res) => {
+  const body = req.body;
+  const [subCommand, ...args] = body.text.split(' '); //分割代入。あとでググる
+  res.status(200).end();
+  switch (subCommand) {
+    case 'hello':
+      axios.post(body.response_url, {
+        text: `<@W018927DL72> ${body.user_name} wanna TakkesyEats:v:`,
+        response_type: 'in_channel'
+      });
+      break;
+    case 'yamabico':
+      await sleep(5000);
+      axios.post(body.response_url, {
+        text: `with delay | TakessyEatsの注文を検知しました:salute:`,
+        response_type: 'in_channel'
+      });
+      break;
+    default:
+      axios.post(body.response_url, {
+        test: `${subCommand}はコマンドとして定義されてないズラ`
+      });
+      break;
+  }
+}
+
+const actions = (req, res) => {
+  const payload = JSON.parse(req.body.payload);
+  const action_id = payload.actions[0].action_id;
+  switch (action_id) {
+    case 'complete':
+      const messageBlocks = payload.message.blocks;
+      const now = new Date();
+      const responsePayload = {
+        blocks: messageBlocks.map(block => {
+          return block.block_id !== 'task_actions'
+          ? block
+          : {
+            type: 'context',
+            elements: [
+              {
+                type: 'mrkdwn',
+                text: `${now.getMonth()+1}/${now.getDate()}に完了しましたw`
+              }
+            ]
+          }
+        }),
+        replace_original: true
+      }
+      axios.post(payload.response_url, responsePayload);
+      break;
+
+    case 'delete':
+      axios.post(payload.response_url, {
+        delete_original: true
+      });
+      break;
+  }
+  res.status(200).end();
 };
+
 
 exports.function = functions.https.onRequest((req, res) => {
   const paths = {
     '/sample': sample,
     '/commands': commands,
+    '/actions': actions,
     '/api': api,
     '/hello': hello,
     '/': () => res.send(Object.keys(paths))
