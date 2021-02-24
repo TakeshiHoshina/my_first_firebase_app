@@ -167,7 +167,7 @@ const actions = (req, res) => {
   const payload = JSON.parse(req.body.payload);
   const action_id = payload.actions[0].action_id;
   switch (action_id) {
-    case 'complete':
+    case 'complete': // completeが押された場合の処理
       const messageBlocks = payload.message.blocks;
       const now = new Date();
       const responsePayload = {
@@ -189,7 +189,7 @@ const actions = (req, res) => {
       axios.post(payload.response_url, responsePayload);
       break;
 
-    case 'delete':
+    case 'delete': //deleteが押された場合の処理
       axios.post(payload.response_url, {
         delete_original: true
       });
